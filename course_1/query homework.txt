@@ -1,0 +1,51 @@
+no 4 sql
+select 
+	date(lpep_pickup_datetime),
+	trip_distance
+from 
+	yellow_taxi_trips
+where 
+	lpep_pickup_datetime >= '2019-10-01'
+	And
+	lpep_pickup_datetime < '2019-11-01'
+ORDER BY trip_distance desc
+
+no 3 sql
+select 
+	sum(case when trip_distance <= 1 then 1 else 0 end),
+	sum(case when trip_distance > 1 and trip_distance <= 3 then 1 else 0 end),
+	sum(case when trip_distance > 3 and trip_distance <= 7 then 1 else 0 end),
+	sum(case when trip_distance > 7 and trip_distance <= 10 then 1 else 0 end),
+	sum(case when trip_distance > 10 then 1 else 0 end)
+from 
+	yellow_taxi_trips
+
+no 5 ssql
+select 
+	zpu."Zone" as PUZone,
+	count(zpu."Zone") as total_trip
+from 
+	yellow_taxi_trips as t 
+	join zones as zpu 
+	on t."PULocationID" = zpu."LocationID"
+where 
+	date(lpep_pickup_datetime) = '2019-10-18'
+Group by PUZone
+order by total_trip desc
+limit 3
+
+no 6 sql
+select 
+	zpu."Zone" as PUZone,
+	zdo."Zone" as DOZone,
+	tip_amount
+from 
+	yellow_taxi_trips as t 
+	join zones as zpu 
+	on t."PULocationID" = zpu."LocationID"
+	join zones as zdo on 	t."DOLocationID" = zdo."LocationID"
+Where  zpu."Zone" = 'East Harlem North' and 
+	lpep_pickup_datetime >= '2019-10-01'
+	And
+	lpep_pickup_datetime < '2019-11-01'
+ORDER BY tip_amount desc

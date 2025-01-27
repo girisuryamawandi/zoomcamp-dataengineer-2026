@@ -1,0 +1,27 @@
+Select 
+	t."VendorID", 
+	t."tpep_pickup_datetime", 
+	t."tpep_dropoff_datetime", 
+	t."total_amount", 
+	Concat(zpu."Borough",' / ', zpu."Zone") As "Pick_up_loc",
+	Concat(zdo."Borough",' / ', zdo."Zone") As "Drop_off_loc"
+From 
+	yellow_taxi_trips t Join zones as zpu
+	ON t."PULocationID" = zpu."LocationID"
+	Join zones as zdo
+	on t."DOLocationID" = zdo."LocationID"
+limit 100
+
+select 
+	lpep_pickup_datetime,
+	lpep_dropoff_datetime,
+	zpu."Zone" as PUZone,
+	zdo."Zone" as DOZone
+from 
+	yellow_taxi_trips as t 
+	join zones as zpu 
+	on t."PULocationID" = zpu."LocationID"
+	join zones as zdo on 
+	t."DOLocationID" = zdo."LocationID"
+where 
+	date(lpep_pickup_datetime) = '2019-10-18'
